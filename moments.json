@@ -1,0 +1,11 @@
+[["wait",800],
+ ["eval","window.__qcSeek(1.6)"],["wait",120],["shot","shots/tour-1-drive-4k.png"],
+ ["eval","window.__qcSeek(3.3)"],["wait",120],["shot","shots/tour-2-drive-cp.png"],
+ ["eval","window.__qcSeek(4.4)"],["wait",120],["shot","shots/tour-3-drive-mxc.png"],
+ ["eval","window.__qcSeek(5.3)"],["wait",120],["shot","shots/tour-4-gate.png"],
+ ["eval","window.__qcSeek(7.6)"],["wait",120],["shot","shots/tour-5-readout-hemt.png"],
+ ["eval","window.__qcSeek(9.3)"],["wait",120],["shot","shots/tour-6-readout-out.png"],
+ ["eval","window.__qcSeek(11.2)"],["wait",120],["shot","shots/tour-7-t1-decay.png"],
+ ["eval","window.__qcSeek(4.4)"],["wait",120],["shot","shots/zoom-pulse-mxc-dark.png",null,4,[235,400,200,110]],
+ ["eval","window.__qcSeek(5.3)"],["wait",120],["shot","shots/zoom-gate-dark.png",null,4,[275,480,110,80]],
+ ["eval","window.__qcSeek(7.6)"],["wait",120],["shot","shots/zoom-hemt-pulse-dark.png",null,4,[255,245,130,85]]]
