@@ -11,7 +11,7 @@ export const STAGES = [
   { id: "50k", name: "50 K", T: 35, atten: 0, label: "35 K" },
   { id: "4k", name: "4 K", short: "4 K", T: 2.85, atten: 20, label: "2.85 K" },
   { id: "still", name: "still", T: 0.882, atten: 0, label: "0.88 K" },
-  { id: "cp", name: "cold plate", short: "cold plate", T: 0.082, atten: 20, label: "82 mK" },
+  { id: "cp", name: "cold plate", short: "Cold plate", T: 0.082, atten: 20, label: "82 mK" },
   { id: "mxc", name: "mixing chamber", short: "MXC", T: 0.014, atten: 20, label: "14 mK" },
 ];
 

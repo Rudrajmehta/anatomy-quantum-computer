@@ -144,8 +144,12 @@ async function render(cut) {
       spring(cam.z, shot.zoom, 1 / FPS, 0.42);
     }
     // once the camera is home on the full view, snap it there exactly, so the last frame matches the first
-    const home = shot.look === "full" && Math.abs(cam.z.x - 1) < 1e-3 && Math.abs(cam.x.x - full[0]) < 1e-3 && Math.abs(cam.y.x - full[1]) < 1e-3;
-    if (home) for (const [c, to] of [[cam.x, full[0]], [cam.y, full[1]], [cam.z, 1]]) { c.x = to; c.v = 0; }
+    // (a smoothstep blend over the last stretch of the pull-back, so it lands without a jump)
+    if (v >= 14.6) {
+      const u = Math.min(1, (v - 14.6) / 0.6);
+      const w = u * u * (3 - 2 * u);
+      for (const [c, to] of [[cam.x, full[0]], [cam.y, full[1]], [cam.z, 1]]) { c.x += (to - c.x) * w; c.v *= 1 - w; }
+    }
     const scale = fit * cam.z.x; // output px per svg unit
     const ww = C.w / scale;
     const wh = C.h / scale;

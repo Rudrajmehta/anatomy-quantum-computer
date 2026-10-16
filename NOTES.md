@@ -8,7 +8,7 @@ A dilution refrigerator "chandelier" in its frame. Six plates hang from the top:
 
 ## The idea it explains
 
-Why a quantum computer is mostly a refrigerator. A 5 GHz drive pulse leaves the room-temperature rack carrying about 1,250 thermal photons per mode (kT/hf at 300 K). It loses 20 dB at 4 K, 20 dB at the cold plate and 20 dB at the mixing chamber, each attenuator replacing most of what came in with its own stage's much colder thermal photons, so about 0.003 photons reach the chip at 14 mK. A 20 ns pulse flips the qubit; the pointer on the package turns from |0⟩ to |1⟩. The 7.4 GHz readout climbs back through two isolators and a circulator (so amplifier noise cannot reach the chip), gains 40 dB in the HEMT at 2.85 K, and leaves through the room-temperature amplifier. Then the excited state decays with T1 = 85 µs and the pointer returns to |0⟩.
+How a pulse reaches the qubit and the answer gets back out. A 5 GHz drive pulse leaves the room-temperature rack carrying about 1,250 thermal photons per mode (kT/hf at 300 K). It loses 20 dB at 4 K, 20 dB at the cold plate and 20 dB at the mixing chamber, each attenuator replacing most of what came in with its own stage's much colder thermal photons, so about 0.003 photons reach the chip at 14 mK. A 20 ns pulse flips the qubit; the pointer on the package turns from |0⟩ to |1⟩. The 7.4 GHz readout climbs back through two isolators and a circulator (so amplifier noise cannot reach the chip), gains 40 dB in the HEMT at 2.85 K, and leaves through the room-temperature amplifier. Then the excited state decays with T1 = 85 µs and the pointer returns to |0⟩.
 
 ## Concept to part
 
@@ -21,12 +21,12 @@ Why a quantum computer is mostly a refrigerator. A 5 GHz drive pulse leaves the 
 | Heat exchangers cooling the circulating He-3 | Three sintered discs on the column from the still plate to the cold plate |
 | The mixing chamber, where He-3 dilutes into He-4 and the cooling happens | The mixing chamber pot on the MXC plate (tone hi) and the MXC plate itself (tone hi, the one engraved plate) |
 | The qubit chip at 14 mK | The lit copper package on a cold finger under the MXC plate, inside its mu-metal shield ring |
-| The drive pulse travelling down | A lit dot with two tails along the drive coax; it disappears inside each plate and component |
-| 60 dB of attenuation in three bites | Three attenuator barrels on bulkhead flanges at 4 K, cold plate and mixing chamber; the dot shrinks by 26% per bite; the readout ticks −20, −40, −60 dB and the thermal photon number |
+| The drive pulse travelling down | A lit dot with a soft halo and six fading ghost dots behind it along the drive coax; head and ghosts fade out over a couple of units inside each plate and component |
+| 60 dB of attenuation in three bites | Three attenuator barrels on bulkhead flanges at 4 K, cold plate and mixing chamber; the dot shrinks by 14% per bite and a lit ring flashes and grows round each attenuator as it takes its bite; the readout ticks −20, −40, −60 dB and the thermal photon number |
 | Thermal anchoring without attenuation | Feedthrough flanges and bulkhead nuts at the plates with 0 dB (top, 50 K, still) |
-| The gate | A 20 ns pulse: the pointer on the package turns from |0⟩ (back mark) to |1⟩ (front mark) |
+| The gate | A 20 ns pulse: a ring flashes round the package and the pointer turns from |0⟩ (back mark) to |1⟩ (front mark) |
 | The readout cannot let amplifier noise back in | Two isolators at the mixing chamber (a double block) and a circulator with a terminated port at the cold plate |
-| Low-noise amplification at 4 K | The HEMT block at 4 K with its DC plug; the readout dot doubles in size after it |
+| Low-noise amplification at 4 K | The HEMT block at 4 K with its DC plug; a ring flashes round it and the readout dot grows by half after it |
 | Room temperature | The two boxes on the top plate (drive electronics, readout amplifier) and the thermometer on each plate |
 | T1 decay | The pointer returns toward |0⟩ following exp(−t/T1) over 320 µs of qubit time played in 3.6 s |
 
@@ -69,7 +69,8 @@ Not verified against a primary source: the exact LNF LNC4_8C noise temperature (
 - Keys: Left and Right step between fourteen moments, Home and End, Space or Enter pauses and resumes, Escape resumes the tour.
 - `role="slider"`, `aria-valuetext` carries the phase, a polite live region announces phase changes while the figure is focused. Reduced motion gives a still at the moment the qubit is in |1⟩ (t = 5.3 s); the keys still work.
 - Stops when settled and when offscreen (IntersectionObserver).
-- `window.__qcSeek(t)` seeks the loop for scripted capture (the video uses it).
+- Pulse: radius 4.4 viewBox units on the drive line (shrinking 14% per 20 dB), 3.0 on the readout (4.6 after the HEMT), with a halo at 2.3x and 16% opacity and six ghost dots every 3.4 units behind it. Flash rings (attenuators, package, HEMT) are a unit circle in the plate plane, placed and grown by a transform (r0 to r1 with a 0.28 s time constant) under an envelope with an 80 ms smoothstep attack and a 0.32 s exponential decay, so they fade and never pop. They are off under reduced motion. The package stays the one lit part at rest; pulse and rings only exist while something happens.
+- `window.__qcSeek(t)` seeks the loop for scripted capture, and `window.__qcPose(t)` returns the two caption lines and the screen point to look at (the pulse head, or the package). Both videos use them.
 
 ## Rebuild, re-capture, re-render
 
@@ -97,12 +98,34 @@ node scripts/capture.mjs quantum-computer-light.html --out shots/zoom-pkg-light.
 node scripts/lines.mjs quantum-computer.html --out shots/lines.png
 node scripts/lines.mjs quantum-computer-light.html --out shots/lines-light.png
 
-node make-video.mjs            # frames/ at 15 fps for 14 s, then tour.mp4 (1600x900, 30 fps, h264) and tour-square.mp4 (900x900 crop)
+node director.mjs              # the director's cut: tour-vertical.mp4 (1080x1350) and tour-wide.mp4 (1600x900)
+node director.mjs --only vertical
+node director.mjs --page quantum-computer-light.html --suffix -light    # the same cuts from the light page
+
+# contact sheet and checks
+ffmpeg -y -i tour-vertical.mp4 -vf "select='eq(n\,36)+eq(n\,75)+eq(n\,120)+eq(n\,219)+eq(n\,309)+eq(n\,405)',scale=540:675,tile=3x2" -frames:v 1 -fps_mode vfr shots/video-contact-sheet.png
+ffmpeg -i tour-vertical.mp4 -vf "format=gray,tblend=all_mode=difference,signalstats,metadata=print:key=lavfi.signalstats.YAVG:file=ydiff.txt" -f null -   # mean of YAVG = mean frame difference
+
+node make-video.mjs            # the plain live loop: tour.mp4 (1600x900, 14 s) and tour-square.mp4 (900x900 crop), card and legend as on the page
 ```
+
+## Director's cut
+
+`director.mjs` films the live page in headless Chrome over CDP. It hides the card corners, border and legend, and paints the page in the card colour. For each frame (30 fps, 16 s, 480 frames) it:
+
+1. maps video time to loop time (0 to 0.9 s: the rack, full fridge; 0.9 to 6.5 s: the drive line, slightly slower than live; 6.5 to 8.0 s: hold on the package for the gate; 8.0 to 12.0 s: the readout climbing; 12.0 to 16.0 s: the T1 decay and the stage temperatures);
+2. calls `__qcSeek(t)` and reads `__qcPose(t)`;
+3. moves the camera with critically damped springs (look point time constant 0.32 s, zoom 0.42 s): full fridge, then 2.35x following the pulse down, 2.5x on the package, 2.3x following the readout up, then back to the full fridge, blended exactly home by a smoothstep from 14.6 to 15.2 s so the last frame matches the first;
+4. asks Chrome for that crop at output size (`Page.captureScreenshot` with a clip and a scale), so the drawing is rendered as vectors at 1080x1350 or 1600x900, never upscaled;
+5. burns in the caption as a page overlay scaled to output pixels: "Fig 1 · A quantum computer" at the top (30 px vertical, 26 px wide) and two lines at the bottom in the page's mono font and colours: the stage name and temperature (48 / 46 px) and the dB this stage, running total and n̄ (40 / 38 px). Over the last 0.6 s the bottom caption fades through to the opening caption, so the loop is clean.
+
+The frames go to `frames-vertical/` and `frames-wide/`, are encoded with `ffmpeg -framerate 30 -i f_%04d.png -vf format=yuv420p -c:v libx264 -preset slow -crf 18 -movflags +faststart`, and are deleted afterwards.
 
 `make-video.mjs` drives the page in headless Chrome at a 1333x750 viewport, calls `__qcSeek(i/15)` for each of the 210 frames, screenshots the viewport at 1.2x (1600x900) and runs `ffmpeg -framerate 15 -i frame_%04d.png -vf "fps=30,format=yuv420p" -c:v libx264 -crf 23 tour.mp4`. The square cut is `crop=900:900:350:0` on the same frames. `frames/` is removed after encoding; the script recreates it.
 
 ## Checks
+
+- Director's cut, measured on the final files: tour-vertical.mp4 16.0 s, 1080x1350, 30 fps, h264 yuv420p, 6.4 MB, mean frame-to-frame difference 4.45/255 (median 5.29), first vs last frame 0.24/255; tour-wide.mp4 16.0 s, 1600x900, 3.7 MB, mean difference 2.35/255, first vs last 0.10/255. For comparison the plain tour.mp4 measures 0.14/255 (median 0). Contact sheet: shots/video-contact-sheet.png (six frames: the pulse leaving the rack at 1x, crossing the 50 K plate, past the 4 K bite with its ring fading, the package with its flip ring, the readout at the circulator, the decay on the full fridge); shots/video-wide-check.png is one frame of the wide cut at the cold-plate bite.
 
 - Audit: `audit passed` (clearance 0, terminals 0, loose ends 0, folds 0, support 0 loose 0 hanging 0 sunk, depth order 0, self-overlap 0, wobble 0, stand-in shapes 0, crowding 0) over 14 tubes, 158 solids, 193 items.
 - Line check: `line ends: 0 of 227 ends on 58 lines float` on both themes.
@@ -127,5 +150,7 @@ node make-video.mjs            # frames/ at 15 fps for 14 s, then tour.mp4 (1600
 - POST.md in this folder predates this build and was left untouched.
 
 ## Time
+
+Director's cut and rename: 05:30 to 05:45 local.
 
 About 30 minutes of work: started 04:59 (reading the skill, references and sources), first page in the browser at 05:14, audit at zero 05:17, close-ups, video, notes and the final re-captures done by 05:30 local.
